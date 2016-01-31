@@ -18,11 +18,12 @@ var tpl = template.Must(
 	template.New("main").Delims("<%", "%>").Funcs(template.FuncMap{"Now": Now, "json": json.Marshal}).Parse(`
 	<html>
 	<head>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.0.0/moment.min.js"></script>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0-rc.3/handlebars.min.js"></script>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.1/angular.min.js"></script>
+
+		<script src="./static/moment.min.js"></script>
+		<script src="./static/jquery.min.js"></script>
+		<script src="./static/underscore-min.js"></script>
+		<script src="./static/handlebars.min.js"></script>
+		<script src="./static/angular.min.js"></script>
 		<style>
 			body{padding: 40px; color: #33333A; font-family: Arial }
 			table{ border-collapse: collapse}
@@ -80,6 +81,7 @@ var tpl = template.Must(
 	`))
 
 func startHttp(port int, state *State) {
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.HandleFunc("/status", func(w http.ResponseWriter, r *http.Request) {
 		state.Lock.Lock()
 		defer state.Lock.Unlock()
